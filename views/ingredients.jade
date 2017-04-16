@@ -1,0 +1,37 @@
+extends layout
+
+block content
+		// Ingredients Grid Section
+		section#portfolio
+			.container
+				h2.text-center Ingrediencie
+				hr.star-primary
+				.row
+				each row, i in rows
+					.col-sm-4.portfolio-item
+						.portfolio-link(href='#portfolioModal#{i}', data-toggle='modal')
+							.caption
+								.caption-content
+									i.fa.fa-search-plus.fa-3x
+							#{row.name}
+							img.img-fluid(src='img/receptar/#{row.img_path}', alt='')
+
+		// Ingredients Modals
+		each row, i in rows
+			div(id='portfolioModal#{i}').portfolio-modal.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+				.modal-dialog(role='document')
+					.modal-content
+						.close-modal(data-dismiss='modal')
+							.lr
+								.rl
+						.container
+							.row
+								.col-lg-8.offset-lg-2
+									.modal-body
+										h2 #{row.name}
+										hr.star-primary
+										img.img-fluid.img-centered(src='img/receptar/#{row.img_path}', alt='')
+										p #{row.description}
+										button.btn.btn-success(type='button', data-dismiss='modal')
+											i.fa.fa-times
+											|  Zatvor
