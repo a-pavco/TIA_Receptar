@@ -1,0 +1,18 @@
+extends layout
+
+block content
+	ul
+		each error in errors
+			li.alert.alert-danger= error.msg
+	h2 Nový recept
+	form(method='post', action='/new', enctype="multipart/form-data")
+		.form-group
+			label Názov
+				input.form-control(type='text', name='name')
+		.form-group
+			label Popis
+				textarea.form-control(type='textarea', name='description')
+		.form-group
+			label Obrázok
+				input.form-control(type='file', name='imgpath')
+		button.btn.btn-default(type='submit') Pridaj
