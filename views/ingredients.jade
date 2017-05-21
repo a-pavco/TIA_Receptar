@@ -7,14 +7,14 @@ block content
 				h2.text-center Ingrediencie
 				hr.star-primary
 				.row
-				each row, i in rows
-					.col-sm-4.portfolio-item
-						.portfolio-link(href='#portfolioModal#{i}', data-toggle='modal')
-							.caption
-								.caption-content
-									i.fa.fa-search-plus.fa-3x
-							#{row.name}
-							img.img-fluid(src='img/receptar/#{row.img_path}', alt='')
+					each row, i in rows
+						.col-sm-4.portfolio-item
+							.portfolio-link(href='#portfolioModal#{i}', data-toggle='modal')
+								.caption
+									.caption-content
+										i.fa.fa-search-plus.fa-3x
+								p #{row.name}
+								img.img-fluid(src='img/receptar/#{row.img_path}', alt='')
 
 		// Ingredients Modals
 		each row, i in rows

@@ -17,18 +17,56 @@ router.get('/', function (req, res, next) {
   connection.query('SELECT * from drinks', function (err, rows, fields) {
     if (err) throw err;
     res.render('index', {
-      "rows": rows
+      "rows": rows,
     });
   });
 });
 
 /* GET recipe edit */
 router.get('/editDrink/:id', function (req, res, next) {
-  connection.query('SELECT * from drinks WHERE id ='+req.params.id, function (err, row, fields) {
+  connection.query('SELECT * from drinks WHERE id =' + req.params.id, function (err, row, fields) {
     if (err) throw err;
     res.render('editDrink', {
       "row": row[0],
     });
+  });
+});
+
+/* Adding to favourites */
+router.get('/addToFav/:id', function (req, res, next) {
+  console.log(req.params.id);
+  console.log(res.locals.user.id);
+  var pair = {
+    user_id: res.locals.user.id,
+    drink_id: req.params.id
+  };
+  var query = connection.query('INSERT INTO users_drinks SET ?', pair, function (err, result) {
+    // pair inserted
+    req.flash('success', 'Drink favourited.');
+    res.location('/');
+    res.redirect('/');
+    if (err) {
+      console.log(err);
+    }
+  });
+});
+
+/* Removing to favourites */
+router.get('/removeFromFav/:id', function (req, res, next) {
+  console.log(req.params.id);
+  console.log(res.locals.user.id);
+  var pair = {
+    user_id: res.locals.user.id,
+    drink_id: req.params.id
+  };
+  var query = connection.query("DELETE FROM `users_drinks` WHERE `user_id` = '" + res.locals.user.id + "' and `drink_id` = '" + req.params.id + "'", pair, function (err, result) {
+    // pair deleted
+    req.flash('success', 'Drink removed from favourites');
+    res.location('/favourites');
+    res.redirect('/favourites');
+    if (err) {
+      console.log(err);
+    }
   });
 });
 
@@ -44,8 +82,18 @@ router.get('/ingredients', function (req, res, next) {
   });
 });
 
+
+router.get('/favourites', function (req, res, next) {
+  connection.query("SELECT * from `drinks` left join `users_drinks` on `id` = `drink_id` where `user_id` = '" + res.locals.user.id + "'", function (err, rows, fields) {
+    if (err) throw err;
+    res.render('favourites', {
+      "rows": rows
+    });
+  });
+});
+
 router.get('/new', function (req, res, next) {
-  res.render('new',{errors: []});
+  res.render('new', { errors: [] });
 });
 
 router.post('/new', function (req, res, next) {
@@ -75,9 +123,9 @@ router.post('/new', function (req, res, next) {
 
     //req.assert('name', 'Je potrebný názov drinku.').notEmpty();
     //req.assert('description', 'Je potrebný popis drinku.').notEmpty();
-    
+
     var errors = req.validationErrors();
-    
+
     if (errors) {
       console.log(errors);
       errors.forEach(function (error) {
@@ -137,15 +185,15 @@ router.post('/editDrink/:id', function (req, res, next) {
 
     //req.assert('name', 'Je potrebný názov drinku.').notEmpty();
     //req.assert('description', 'Je potrebný popis drinku.').notEmpty();
-    
+
     var errors = req.validationErrors();
-    
+
     if (errors) {
       console.log(errors);
       errors.forEach(function (error) {
       });
-      res.location('/editDrink/'+req.params.id);
-      res.redirect('/editDrink/'+req.params.id);
+      res.location('/editDrink/' + req.params.id);
+      res.redirect('/editDrink/' + req.params.id);
     } else {
       console.log('rip');
       var drink = {
@@ -153,7 +201,7 @@ router.post('/editDrink/:id', function (req, res, next) {
         description: description,
         img_path: drinkImageName
       };
-      var query = connection.query('UPDATE drinks SET ? WHERE id='+req.params.id, drink, function (err, result) {
+      var query = connection.query('UPDATE drinks SET ? WHERE id=' + req.params.id, drink, function (err, result) {
         // project inserted
         req.flash('success', 'Drink Edited');
 
@@ -170,14 +218,14 @@ router.post('/editDrink/:id', function (req, res, next) {
 
 // delete a drink //
 
-router.delete('/delete/:id', function(req, res){
+router.delete('/delete/:id', function (req, res) {
   console.log('DRINK DELETED LOL');
-  connection.query('DELETE FROM drinks WHERE id = '+req.params.id, function(err, result){
-    	if (err) {
-        console.log(err);
-      }
+  connection.query('DELETE FROM drinks WHERE id = ' + req.params.id, function (err, result) {
+    if (err) {
+      console.log(err);
+    }
   });
-	req.flash('success', 'Drink deleted');
+  req.flash('success', 'Drink deleted');
   res.location('/');
   res.redirect('/');
 });

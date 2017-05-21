@@ -8,14 +8,14 @@ block content
 				h2.text-center Recepty
 				hr.star-primary
 				.row
-				each row, i in rows
-					.col-sm-4.portfolio-item
-						.portfolio-link(href='#portfolioModal#{i}', data-toggle='modal')
-							.caption
-								.caption-content
-									i.fa.fa-search-plus.fa-3x
-							p #{row.name}
-							img.img-fluid(src='img/receptar/#{row.img_path}', alt='')
+					each row, i in rows
+						.col-sm-4.portfolio-item
+							.portfolio-link(href='#portfolioModal#{i}', data-toggle='modal')
+								.caption
+									.caption-content
+										i.fa.fa-search-plus.fa-3x
+								p #{row.name}
+								img.img-fluid(src='img/receptar/#{row.img_path}', alt='')
 
 		// Drinks Modals
 		each row, i in rows
@@ -39,12 +39,17 @@ block content
 												strong #{moment(row.date_added).format("MM-DD-YYYY")}
 										br 
 										br
-										a.btn.btn-primary(href='/editDrink/#{row.id}') Edit 
-										br
-										br
-										a.btn.btn-danger(href='#' class='deleteDrink' data-id='#{row.id}') Delete 
-										br
-										br																							
+										if user
+											a.btn.btn-primary(href='/addToFav/#{row.id}') Add to favourites 
+											br
+											br
+											if user.status == 'a'										
+												a.btn.btn-primary(href='/editDrink/#{row.id}') Edit 
+												br
+												br
+												a.btn.btn-danger(href='/' class='deleteDrink' data-id='#{row.id}') Delete 
+												br
+												br																							
 										button.btn.btn-success(type='button', data-dismiss='modal')
 											i.fa.fa-times
 											|  Zatvor

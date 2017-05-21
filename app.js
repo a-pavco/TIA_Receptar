@@ -3,11 +3,13 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var flash = require('connect-flash');
-var multer = require('multer');
 var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var bodyParser = require('body-parser');
+var multer = require('multer');
 
 var index = require('./routes/index');
 //var deleteDrink = require('./routes/delete');
@@ -41,6 +43,10 @@ app.use(session({
   resave: true
 }));
 
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Connect-Flash
 app.use(flash());
 
@@ -68,8 +74,12 @@ app.use(expressValidator({
   }
 }));
 
+app.get('*', function(req, res, next){
+  res.locals.user = req.user || null;
+  next();
+});
+
 app.use('/', index);
-//app.use('/delete', deleteDrink);
 app.use('/users', users);
 
 // catch 404 and forward to error handler

@@ -5,7 +5,7 @@ $(document).ready(function(){
 
 function deleteDrink(){
   deleteId = $(this).data('id');
-  var confirmation = confirm('Vymazať projekt?');
+  var confirmation = confirm('Vymazať recept?');
 
   if(confirmation){
     $.ajax({
@@ -14,7 +14,6 @@ function deleteDrink(){
     }).done(function(response){   
       
     });
-    //window.location = '/';
   } else {
     return false;
   }

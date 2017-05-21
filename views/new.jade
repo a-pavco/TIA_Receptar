@@ -4,7 +4,7 @@ block content
 	ul
 		each error in errors
 			li.alert.alert-danger= error.msg
-	h2 Nový recept
+	h1 Nový recept
 	form(method='post', action='/new', enctype="multipart/form-data")
 		.form-group
 			label Názov
